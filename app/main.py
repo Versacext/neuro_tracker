@@ -1,5 +1,3 @@
-# app/main.py
-
 from fastapi import FastAPI, HTTPException, status
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
@@ -25,15 +23,16 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Настройка подключения статических файлов и шаблонов
-# (раскомментируйте, когда будете запускать сервер локально)
-# app.mount("/static", StaticFiles(directory="static"), name="static")
-# templates = Jinja2Templates(directory="templates")
+# Подключаем папку со статичными файлами (стили, скрипты)
+app.mount("/static", StaticFiles(directory="static"), name="static")
 
-# @app.get("/")
-# async def serve_dashboard(request: Request):
-#     """Главная страница панели мониторинга."""
-#     return templates.TemplateResponse("index.html", {"request": request})
+# Указываем папку, где лежит index.html
+templates = Jinja2Templates(directory="templates")
+
+@app.get("/")
+async def serve_dashboard(request: Request):
+    """Главная страница панели мониторинга."""
+    return templates.TemplateResponse("index.html", {"request": request})
 
 @app.get("/api/status", response_model=Dict[str, Any])
 def get_system_status() -> Dict[str, Any]:
@@ -69,4 +68,4 @@ def clear_measurements() -> Dict[str, Any]:
     """Очищает базу данных."""
     db.clear_all()
     return {"message": "Data cleared successfully."}
-  
+    
