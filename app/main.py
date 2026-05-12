@@ -32,7 +32,8 @@ templates = Jinja2Templates(directory="templates")
 @app.get("/")
 async def serve_dashboard(request: Request):
     """Главная страница панели мониторинга."""
-    return templates.TemplateResponse("index.html", {"request": request})
+    return templates.TemplateResponse(request=request, name="index.html")
+
 
 @app.get("/api/status", response_model=Dict[str, Any])
 def get_system_status() -> Dict[str, Any]:
